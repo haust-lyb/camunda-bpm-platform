@@ -39,6 +39,7 @@ import org.camunda.bpm.engine.cdi.impl.ProcessVariableMap;
 import org.camunda.bpm.engine.cdi.impl.context.DefaultContextAssociationManager;
 import org.camunda.bpm.engine.cdi.jsf.TaskForm;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
+import org.camunda.bpm.quarkus.engine.extension.impl.CamundaEngineConfig;
 import org.camunda.bpm.quarkus.engine.extension.impl.CamundaEngineRecorder;
 import org.jboss.jandex.DotName;
 
@@ -88,11 +89,12 @@ public class CamundaEngineProcessor {
   @Record(RUNTIME_INIT)
   protected void processEngineConfiguration(CamundaEngineRecorder recorder,
                                             BeanContainerBuildItem beanContainer,
+                                            CamundaEngineConfig camundaEngineConfig,
                                             BuildProducer<ProcessEngineConfigurationBuildItem> configurationProducer) {
 
     recorder.configureProcessEngineCdiBeans(beanContainer.getValue());
     RuntimeValue<ProcessEngineConfigurationImpl> processEngineConfiguration =
-        recorder.createProcessEngineConfiguration(beanContainer.getValue());
+        recorder.createProcessEngineConfiguration(beanContainer.getValue(), camundaEngineConfig);
     configurationProducer.produce(new ProcessEngineConfigurationBuildItem(processEngineConfiguration));
   }
 
